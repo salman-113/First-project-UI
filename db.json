@@ -1,6 +1,6 @@
 {
   "users": [
-      {
+    {
       "id": "1",
       "username": "admin",
       "email": "admin@example.com",
@@ -11,6 +11,25 @@
       "orders": [],
       "wishlist": [],
       "created_at": "2023-01-01T00:00:00Z"
+    },
+    {
+      "id": "4377",
+      "name": "Muhammed salman faris",
+      "email": "salman@gmail.com",
+      "password": "123456",
+      "role": "user",
+      "isBlock": false,
+      "cart": [],
+      "orders": [],
+      "wishlist": [
+        {
+          "productId": "2",
+          "name": "Apple iPhone 14 Pro",
+          "price": 129900,
+          "image": "https://m.media-amazon.com/images/I/61cwywLZR-L._SL1500_.jpg"
+        }
+      ],
+      "created_at": "2025-07-31T15:17:21.839Z"
     }
   ],
   "products": [
