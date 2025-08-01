@@ -5,12 +5,15 @@ import { CartContext } from '../context/CartContext';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { FaCcVisa, FaCcMastercard, FaCcAmex, FaCcDiscover, FaPaypal, FaMoneyBillWave } from 'react-icons/fa';
+import axios from 'axios';
+
+const API_URL = 'http://localhost:5001/users';
 
 const Checkout = () => {
-  const { user } = useContext(AuthContext);
+  const { user, addOrder } = useContext(AuthContext);
   const { cart, clearCart, getCartTotal } = useContext(CartContext);
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -23,8 +26,9 @@ const Checkout = () => {
     cardExpiry: '',
     cardCvc: ''
   });
-  
+
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,50 +40,66 @@ const Checkout = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     if (!formData.address.trim()) newErrors.address = 'Address is required';
     if (!formData.city.trim()) newErrors.city = 'City is required';
     if (!formData.zipCode.trim()) newErrors.zipCode = 'Zip code is required';
-    
+
     if (formData.paymentMethod === 'creditCard') {
       if (!formData.cardNumber.trim()) newErrors.cardNumber = 'Card number is required';
       if (!formData.cardExpiry.trim()) newErrors.cardExpiry = 'Expiry date is required';
       if (!formData.cardCvc.trim()) newErrors.cardCvc = 'CVC is required';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
-    
+    if (isSubmitting || !validateForm()) return;
+
+    setIsSubmitting(true);
+
     try {
-      // Simulate order processing
       const order = {
+        id: Date.now().toString(),
         userId: user.id,
-        items: cart,
+        items: cart.map(item => ({
+          productId: item.productId,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          image: item.image
+        })),
         total: getCartTotal(),
-        shippingAddress: {
+        shippingInfo: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
           address: formData.address,
           city: formData.city,
           zipCode: formData.zipCode
         },
         paymentMethod: formData.paymentMethod,
-        status: 'completed',
+        status: 'pending',
         createdAt: new Date().toISOString()
       };
-      
+
+      await addOrder(order);
       await clearCart();
+
       toast.success('Order placed successfully!');
       navigate('/orders');
     } catch (error) {
-      toast.error('Failed to place order. Please try again.');
+      console.error('Checkout error:', error);
+      toast.error(error.response?.data?.message || error.message || 'Failed to place order. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -127,7 +147,8 @@ const Checkout = () => {
     );
   }
 
-  return (
+
+return (
     <div className="bg-black min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -140,7 +161,7 @@ const Checkout = () => {
           <div className="lg:w-2/3">
             <motion.form 
               onSubmit={handleSubmit} 
-              className=" rounded-lg shadow-lg p-6 mb-6 border border-[#021F44]"
+              className="rounded-lg shadow-lg p-6 mb-6 border border-[#021F44]"
             >
               <h2 className="text-xl font-semibold mb-6 text-[#E2E2B6]">Shipping Information</h2>
               
@@ -325,9 +346,10 @@ const Checkout = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                className="w-full bg-[#6EACDA] text-[#021526] py-3 rounded-lg font-semibold hover:bg-[#E2E2B6] transition-colors"
+                disabled={isSubmitting}
+                className={`w-full ${isSubmitting ? 'bg-gray-500' : 'bg-[#6EACDA]'} text-[#021526] py-3 rounded-lg font-semibold hover:bg-[#E2E2B6] transition-colors`}
               >
-                Place Order
+                {isSubmitting ? 'Processing...' : 'Place Order'}
               </motion.button>
             </motion.form>
           </div>
@@ -336,7 +358,7 @@ const Checkout = () => {
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className=" rounded-lg shadow-lg p-6 border border-[#021F44]"
+              className="rounded-lg shadow-lg p-6 border border-[#021F44]"
             >
               <h2 className="text-xl font-semibold mb-6 text-[#E2E2B6]">Order Summary</h2>
               
@@ -347,7 +369,7 @@ const Checkout = () => {
                       <p className="text-[#E2E2B6]">{item.name}</p>
                       <p className="text-sm text-[#6EACDA]">Qty: {item.quantity}</p>
                     </div>
-                    <p className="text-[#6EACDA]">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="text-[#6EACDA]">₹{(item.price * item.quantity).toFixed(2)}</p>
                   </div>
                 ))}
               </div>
@@ -356,7 +378,7 @@ const Checkout = () => {
               
               <div className="flex justify-between font-bold text-lg mb-6 text-[#6EACDA]">
                 <span>Total</span>
-                <span>${getCartTotal().toFixed(2)}</span>
+                <span>₹{getCartTotal().toFixed(2)}</span>
               </div>
             </motion.div>
           </div>

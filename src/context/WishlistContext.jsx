@@ -2,11 +2,13 @@ import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { AuthContext } from './AuthContext';
+import { CartContext } from './CartContext'; // ✅ Add this
 
 export const WishlistContext = createContext();
 
 export const WishlistProvider = ({ children }) => {
   const { user, updateUser } = useContext(AuthContext);
+  const { cart, setCart } = useContext(CartContext);
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,7 +26,7 @@ export const WishlistProvider = ({ children }) => {
       toast.error('Please login to manage your wishlist');
       return false;
     }
-    
+
     try {
       const updatedUser = { ...user, wishlist: newWishlist };
       await updateUser(updatedUser);
@@ -41,12 +43,12 @@ export const WishlistProvider = ({ children }) => {
       toast.error('Please login to add items to wishlist');
       return false;
     }
-    
+
     if (wishlist.some(item => item.productId === product.id)) {
       toast.info('Product already in wishlist');
       return false;
     }
-    
+
     const newWishlist = [
       ...wishlist,
       {
@@ -56,7 +58,7 @@ export const WishlistProvider = ({ children }) => {
         image: product.images[0]
       }
     ];
-    
+
     return await updateWishlist(newWishlist);
   };
 
@@ -65,19 +67,32 @@ export const WishlistProvider = ({ children }) => {
     return await updateWishlist(newWishlist);
   };
 
-  const moveToCart = async (productId, cartContext) => {
+  const moveToCart = async (productId) => {
     const productInWishlist = wishlist.find(item => item.productId === productId);
-    if (!productInWishlist) return false;
-    
-    const success = await cartContext.addToCart({
-      id: productInWishlist.productId,
-      name: productInWishlist.name,
-      price: productInWishlist.price,
-      images: [productInWishlist.image]
-    });
-    
+    if (!productInWishlist) {
+      toast.error("Product not found in wishlist");
+      return false;
+    }
+
+    // Prepare new cart and wishlist arrays
+    const newCart = [
+      ...cart,
+      {
+        productId: productInWishlist.productId,
+        quantity: 1,
+        price: productInWishlist.price,
+        name: productInWishlist.name,
+        image: productInWishlist.image
+      }
+    ];
+    const newWishlist = wishlist.filter(item => item.productId !== productId);
+
+    // Update user with both new cart and wishlist at once
+    const success = await updateUser({ cart: newCart, wishlist: newWishlist });
     if (success) {
-      await removeFromWishlist(productId);
+      setCart(newCart);
+      setWishlist(newWishlist);
+      toast.success('Product moved to cart');
       return true;
     }
     return false;
