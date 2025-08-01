@@ -19,7 +19,15 @@
       "password": "123456",
       "role": "user",
       "isBlock": false,
-      "cart": [],
+      "cart": [
+        {
+          "productId": "1",
+          "quantity": 1,
+          "price": 1499,
+          "name": "Boat Rockerz 450 Bluetooth Headphones",
+          "image": "https://m.media-amazon.com/images/I/51xxA+6E+xL._SL1500_.jpg"
+        }
+      ],
       "orders": [],
       "wishlist": [
         {
@@ -30,6 +38,18 @@
         }
       ],
       "created_at": "2025-07-31T15:17:21.839Z"
+    },
+    {
+      "id": "3595",
+      "name": "Asnif",
+      "email": "asnif@gmail.com",
+      "password": "123456",
+      "role": "user",
+      "isBlock": false,
+      "cart": [],
+      "orders": [],
+      "wishlist": [],
+      "created_at": "2025-08-01T07:17:30.672Z"
     }
   ],
   "products": [
