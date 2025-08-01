@@ -36,17 +36,17 @@ const Navbar = () => {
 
   // Helper function to check if a link is active
   const isActive = (path) => {
-    return location.pathname === path ? 'text-[#FF3C38]' : 'hover:text-[#FF3C38]';
+    return location.pathname === path ? 'text-[#E2E2B6] font-medium' : 'text-[#03346E] hover:text-[#6EACDA]';
   };
 
   return (
-    <nav className="bg-black text-[#F5F5F5] p-4 shadow-lg">
+    <nav className="bg-black text-[#E2E2B6] p-4 shadow-lg">
       <div className="container mx-auto">
         {/* Desktop Navbar */}
         <div className="hidden md:flex justify-between items-center">
           <div className="flex items-center">
             <Link to="/" className={`text-2xl font-bold mr-6 ${isActive('/')} transition-colors`}>
-              E-Shop
+             EchoBay
             </Link>
             <div className="relative w-64">
               <input
@@ -54,7 +54,7 @@ const Navbar = () => {
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 rounded text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#FF3C38]"
+                className="w-full px-4 py-2 rounded text-[#E2E2B6] focus:outline-none focus:ring-1 focus:ring-[#E2E2B6]"
               />
             </div>
           </div>
@@ -71,7 +71,7 @@ const Navbar = () => {
                     e.stopPropagation();
                     setDropdownOpen(!dropdownOpen);
                   }}
-                  className="flex items-center hover:text-[#FF3C38] transition-colors"
+                  className="flex items-center text-[#E2E2B6] hover:text-[#6EACDA] transition-colors"
                 >
                   <span className="mr-1">{user.name}</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -80,17 +80,17 @@ const Navbar = () => {
                 </button>
                 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-[#F5F5F5] rounded-md shadow-lg z-10 text-[#333333] border border-[#CCCCCC]">
+                  <div className="absolute right-0 mt-2 w-48 bg-[#E2E2B6] rounded-md shadow-lg z-10 text-[#021526] border border-[#03346E]">
                     <Link 
                       to="/wishlist" 
-                      className={`block px-4 py-2 hover:bg-[#CCCCCC] ${isActive('/wishlist')}`}
+                      className={`block px-4 py-2 hover:bg-[#6EACDA] hover:text-[#E2E2B6] ${isActive('/wishlist')}`}
                       onClick={() => setDropdownOpen(false)}
                     >
                       Wishlist
                     </Link>
                     <Link 
                       to="/orders" 
-                      className={`block px-4 py-2 hover:bg-[#CCCCCC] ${isActive('/orders')}`}
+                      className={`block px-4 py-2 hover:bg-[#6EACDA] hover:text-[#E2E2B6] ${isActive('/orders')}`}
                       onClick={() => setDropdownOpen(false)}
                     >
                       My Orders
@@ -98,7 +98,7 @@ const Navbar = () => {
                     {user.role === 'admin' && (
                       <Link 
                         to="/admin" 
-                        className={`block px-4 py-2 hover:bg-[#CCCCCC] ${isActive('/admin')}`}
+                        className={`block px-4 py-2 hover:bg-[#6EACDA] hover:text-[#E2E2B6] ${isActive('/admin')}`}
                         onClick={() => setDropdownOpen(false)}
                       >
                         Admin Panel
@@ -106,7 +106,7 @@ const Navbar = () => {
                     )}
                     <button 
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 hover:bg-[#CCCCCC] text-[#FF3C38]"
+                      className="block w-full text-left px-4 py-2 hover:bg-[#6EACDA] hover:text-[#E2E2B6] text-[#03346E]"
                     >
                       Logout
                     </button>
@@ -125,7 +125,7 @@ const Navbar = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               {cart.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#FF3C38] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-[#6EACDA] text-[#021526] text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {cart.length}
                 </span>
               )}
@@ -145,7 +145,7 @@ const Navbar = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               {cart.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#FF3C38] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-[#6EACDA] text-[#021526] text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {cart.length}
                 </span>
               )}
@@ -153,7 +153,7 @@ const Navbar = () => {
             
             <button 
               onClick={toggleMobileMenu}
-              className="text-[#F5F5F5] hover:text-[#FF3C38] focus:outline-none transition-colors"
+              className="text-[#E2E2B6] hover:text-[#6EACDA] focus:outline-none transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -164,18 +164,18 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-[#333333] mt-4 p-4 rounded-lg shadow-lg">
+          <div className="md:hidden bg-[#03346E] mt-4 p-4 rounded-lg shadow-lg">
             <div className="mb-4">
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 rounded text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#FF3C38]"
+                className="w-full px-4 py-2 rounded text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#6EACDA]"
               />
             </div>
             
-            <div className="flex flex-col space-y-3">
+            <div className="flex flex-col space-y-3 text-[#E2E2B6]">
               <Link 
                 to="/" 
                 className={`${isActive('/')} transition-colors`}
@@ -228,7 +228,7 @@ const Navbar = () => {
                       handleLogout();
                       setMobileMenuOpen(false);
                     }}
-                    className="text-left hover:text-[#FF3C38] transition-colors text-[#FF3C38]"
+                    className="text-left hover:text-[#6EACDA] transition-colors"
                   >
                     Logout
                   </button>

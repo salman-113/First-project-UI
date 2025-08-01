@@ -46,9 +46,60 @@
       "password": "123456",
       "role": "user",
       "isBlock": false,
-      "cart": [],
+      "cart": [
+        {
+          "productId": "5",
+          "quantity": 3,
+          "price": 99900,
+          "name": "Apple MacBook Air M2",
+          "image": "https://m.media-amazon.com/images/I/71TPda7cwUL._SL1500_.jpg"
+        }
+      ],
       "orders": [],
-      "wishlist": [],
+      "wishlist": [
+        {
+          "productId": "1",
+          "name": "Boat Rockerz 450 Bluetooth Headphones",
+          "price": 1499,
+          "image": "https://m.media-amazon.com/images/I/51xxA+6E+xL._SL1500_.jpg"
+        },
+        {
+          "productId": "2",
+          "name": "Apple iPhone 14 Pro",
+          "price": 129900,
+          "image": "https://m.media-amazon.com/images/I/61cwywLZR-L._SL1500_.jpg"
+        },
+        {
+          "productId": "5",
+          "name": "Apple MacBook Air M2",
+          "price": 99900,
+          "image": "https://m.media-amazon.com/images/I/71TPda7cwUL._SL1500_.jpg"
+        },
+        {
+          "productId": "4",
+          "name": "Boat Airdopes 441",
+          "price": 1299,
+          "image": "https://m.media-amazon.com/images/I/51HBom8xz7L._SL1500_.jpg"
+        },
+        {
+          "productId": "7",
+          "name": "Boat Stone 350 Bluetooth Speaker",
+          "price": 1499,
+          "image": "https://m.media-amazon.com/images/I/61gS2e+5TPL._SL1500_.jpg"
+        },
+        {
+          "productId": "8",
+          "name": "Apple Watch Series 8",
+          "price": 45900,
+          "image": "https://m.media-amazon.com/images/I/71X7I7Y1xAL._SL1500_.jpg"
+        },
+        {
+          "productId": "6",
+          "name": "Redmi Smart TV X43",
+          "price": 26999,
+          "image": "https://m.media-amazon.com/images/I/71tZm1vRPUL._SL1500_.jpg"
+        }
+      ],
       "created_at": "2025-08-01T07:17:30.672Z"
     }
   ],
