@@ -34,7 +34,7 @@ const CartPage = () => {
 
   if (loading) {
     return (
-      <div className="bg-[#021526] min-h-screen flex items-center justify-center">
+      <div className="bg-black min-h-screen flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -45,7 +45,7 @@ const CartPage = () => {
   }
 
   return (
-    <div className="bg-[#021526] min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="bg-black min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -72,7 +72,7 @@ const CartPage = () => {
         ) : (
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-2/3">
-              <div className="bg-[#03346E] rounded-lg shadow-lg overflow-hidden border border-[#6EACDA]">
+              <div className="bg-[#010D1F] rounded-lg shadow-lg overflow-hidden border border-[#021F44]">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-[#021526]">
@@ -157,7 +157,7 @@ const CartPage = () => {
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-[#03346E] rounded-lg shadow-lg p-6 border border-[#6EACDA]"
+                className=" rounded-lg shadow-lg p-6 border border-[#021F44]"
               >
                 <h2 className="text-xl font-semibold mb-4 text-[#E2E2B6]">Order Summary</h2>
                 

@@ -48,11 +48,11 @@
       "isBlock": false,
       "cart": [
         {
-          "productId": "5",
-          "quantity": 3,
-          "price": 99900,
-          "name": "Apple MacBook Air M2",
-          "image": "https://m.media-amazon.com/images/I/71TPda7cwUL._SL1500_.jpg"
+          "productId": "1",
+          "quantity": 1,
+          "price": 1499,
+          "name": "Boat Rockerz 450 Bluetooth Headphones",
+          "image": "https://m.media-amazon.com/images/I/51xxA+6E+xL._SL1500_.jpg"
         }
       ],
       "orders": [],

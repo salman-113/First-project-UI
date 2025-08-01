@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
 import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
+import { FaCcVisa, FaCcMastercard, FaCcAmex, FaCcDiscover, FaPaypal, FaMoneyBillWave } from 'react-icons/fa';
 
 const Checkout = () => {
   const { user } = useContext(AuthContext);
@@ -16,7 +18,10 @@ const Checkout = () => {
     address: '',
     city: '',
     zipCode: '',
-    paymentMethod: 'creditCard'
+    paymentMethod: 'creditCard',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCvc: ''
   });
   
   const [errors, setErrors] = useState({});
@@ -39,6 +44,12 @@ const Checkout = () => {
     if (!formData.city.trim()) newErrors.city = 'City is required';
     if (!formData.zipCode.trim()) newErrors.zipCode = 'Zip code is required';
     
+    if (formData.paymentMethod === 'creditCard') {
+      if (!formData.cardNumber.trim()) newErrors.cardNumber = 'Card number is required';
+      if (!formData.cardExpiry.trim()) newErrors.cardExpiry = 'Expiry date is required';
+      if (!formData.cardCvc.trim()) newErrors.cardCvc = 'CVC is required';
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -49,10 +60,7 @@ const Checkout = () => {
     if (!validateForm()) return;
     
     try {
-      // In a real app, you would process payment here
-      // For demo, we'll just simulate a successful payment
-      
-      // Create order
+      // Simulate order processing
       const order = {
         userId: user.id,
         items: cart,
@@ -67,12 +75,7 @@ const Checkout = () => {
         createdAt: new Date().toISOString()
       };
       
-      // In a real app, you would save the order to your database
-      // For demo, we'll just show a success message
-      
-      // Clear cart
       await clearCart();
-      
       toast.success('Order placed successfully!');
       navigate('/orders');
     } catch (error) {
@@ -82,194 +85,283 @@ const Checkout = () => {
 
   if (!user) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h2 className="text-2xl font-bold mb-4">Please login to proceed to checkout</h2>
-        <button 
-          onClick={() => navigate('/login')}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      <div className="bg-black min-h-screen flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center p-8 bg-[#03346E] rounded-lg shadow-lg border border-[#6EACDA]"
         >
-          Login
-        </button>
+          <h2 className="text-2xl font-bold mb-6 text-[#E2E2B6]">Please login to proceed to checkout</h2>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/login')}
+            className="bg-[#6EACDA] text-[#021526] px-6 py-3 rounded-lg font-semibold hover:bg-[#E2E2B6] transition-colors"
+          >
+            Login
+          </motion.button>
+        </motion.div>
       </div>
     );
   }
 
   if (cart.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
-        <button 
-          onClick={() => navigate('/products')}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      <div className="bg-[#021526] min-h-screen flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center p-8 bg-[#03346E] rounded-lg shadow-lg border border-[#6EACDA]"
         >
-          Continue Shopping
-        </button>
+          <h2 className="text-2xl font-bold mb-6 text-[#E2E2B6]">Your cart is empty</h2>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/products')}
+            className="bg-[#6EACDA] text-[#021526] px-6 py-3 rounded-lg font-semibold hover:bg-[#E2E2B6] transition-colors"
+          >
+            Continue Shopping
+          </motion.button>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Checkout</h1>
-      
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="md:w-2/3">
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-gray-700 mb-1">First Name</label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded ${errors.firstName ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
-              </div>
-              
-              <div>
-                <label className="block text-gray-700 mb-1">Last Name</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded ${errors.lastName ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
-              </div>
-            </div>
-            
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-              />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-            </div>
-            
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-1">Address</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded ${errors.address ? 'border-red-500' : 'border-gray-300'}`}
-              />
-              {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div>
-                <label className="block text-gray-700 mb-1">City</label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded ${errors.city ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
-              </div>
-              
-              <div>
-                <label className="block text-gray-700 mb-1">Zip Code</label>
-                <input
-                  type="text"
-                  name="zipCode"
-                  value={formData.zipCode}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded ${errors.zipCode ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.zipCode && <p className="text-red-500 text-sm mt-1">{errors.zipCode}</p>}
-              </div>
-            </div>
-            
-            <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
-            
-            <div className="mb-6">
-              <div className="flex items-center mb-2">
-                <input
-                  type="radio"
-                  id="creditCard"
-                  name="paymentMethod"
-                  value="creditCard"
-                  checked={formData.paymentMethod === 'creditCard'}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                <label htmlFor="creditCard">Credit Card</label>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input
-                  type="radio"
-                  id="paypal"
-                  name="paymentMethod"
-                  value="paypal"
-                  checked={formData.paymentMethod === 'paypal'}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                <label htmlFor="paypal">PayPal</label>
-              </div>
-              
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  id="cash"
-                  name="paymentMethod"
-                  value="cash"
-                  checked={formData.paymentMethod === 'cash'}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                <label htmlFor="cash">Cash on Delivery</label>
-              </div>
-            </div>
-            
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-            >
-              Place Order
-            </button>
-          </form>
-        </div>
+    <div className="bg-black min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-7xl mx-auto"
+      >
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-[#E2E2B6]">Checkout</h1>
         
-        <div className="md:w-1/3">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-            
-            <div className="mb-4">
-              {cart.map(item => (
-                <div key={item.productId} className="flex justify-between py-2 border-b">
-                  <div>
-                    <span>{item.name}</span>
-                    <span className="text-gray-500 block">Qty: {item.quantity}</span>
-                  </div>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="lg:w-2/3">
+            <motion.form 
+              onSubmit={handleSubmit} 
+              className=" rounded-lg shadow-lg p-6 mb-6 border border-[#021F44]"
+            >
+              <h2 className="text-xl font-semibold mb-6 text-[#E2E2B6]">Shipping Information</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-[#E2E2B6] mb-2">First Name</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 bg-[#021526] rounded-lg border ${errors.firstName ? 'border-red-500' : 'border-[#6EACDA]'} text-[#E2E2B6]`}
+                  />
+                  {errors.firstName && <p className="text-red-400 text-sm mt-1">{errors.firstName}</p>}
                 </div>
-              ))}
-            </div>
-            
-            <div className="border-t my-4"></div>
-            
-            <div className="flex justify-between font-bold text-lg mb-6">
-              <span>Total</span>
-              <span>${getCartTotal().toFixed(2)}</span>
-            </div>
+                
+                <div>
+                  <label className="block text-[#E2E2B6] mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 bg-[#021526] rounded-lg border ${errors.lastName ? 'border-red-500' : 'border-[#6EACDA]'} text-[#E2E2B6]`}
+                  />
+                  {errors.lastName && <p className="text-red-400 text-sm mt-1">{errors.lastName}</p>}
+                </div>
+              </div>
+              
+              <div className="mb-6">
+                <label className="block text-[#E2E2B6] mb-2">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-2 bg-[#021526] rounded-lg border ${errors.email ? 'border-red-500' : 'border-[#6EACDA]'} text-[#E2E2B6]`}
+                />
+                {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+              </div>
+              
+              <div className="mb-6">
+                <label className="block text-[#E2E2B6] mb-2">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-2 bg-[#021526] rounded-lg border ${errors.address ? 'border-red-500' : 'border-[#6EACDA]'} text-[#E2E2B6]`}
+                />
+                {errors.address && <p className="text-red-400 text-sm mt-1">{errors.address}</p>}
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                  <label className="block text-[#E2E2B6] mb-2">City</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 bg-[#021526] rounded-lg border ${errors.city ? 'border-red-500' : 'border-[#6EACDA]'} text-[#E2E2B6]`}
+                  />
+                  {errors.city && <p className="text-red-400 text-sm mt-1">{errors.city}</p>}
+                </div>
+                
+                <div>
+                  <label className="block text-[#E2E2B6] mb-2">Zip Code</label>
+                  <input
+                    type="text"
+                    name="zipCode"
+                    value={formData.zipCode}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 bg-[#021526] rounded-lg border ${errors.zipCode ? 'border-red-500' : 'border-[#6EACDA]'} text-[#E2E2B6]`}
+                  />
+                  {errors.zipCode && <p className="text-red-400 text-sm mt-1">{errors.zipCode}</p>}
+                </div>
+              </div>
+              
+              <h2 className="text-xl font-semibold mb-6 text-[#E2E2B6]">Payment Method</h2>
+              
+              <div className="mb-8 space-y-4">
+                <div className="flex items-center p-4 bg-[#021526] rounded-lg border border-[#6EACDA]">
+                  <input
+                    type="radio"
+                    id="creditCard"
+                    name="paymentMethod"
+                    value="creditCard"
+                    checked={formData.paymentMethod === 'creditCard'}
+                    onChange={handleChange}
+                    className="mr-4 h-5 w-5 text-[#6EACDA]"
+                  />
+                  <label htmlFor="creditCard" className="flex-1 text-[#E2E2B6]">Credit Card</label>
+                  <div className="flex space-x-2">
+                    <FaCcVisa className="text-2xl text-[#E2E2B6]" />
+                    <FaCcMastercard className="text-2xl text-[#E2E2B6]" />
+                    <FaCcAmex className="text-2xl text-[#E2E2B6]" />
+                    <FaCcDiscover className="text-2xl text-[#E2E2B6]" />
+                  </div>
+                </div>
+                
+                {formData.paymentMethod === 'creditCard' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-[#021526] p-4 rounded-lg border border-[#6EACDA] space-y-4"
+                  >
+                    <div>
+                      <label className="block text-[#E2E2B6] mb-2">Card Number</label>
+                      <input
+                        type="text"
+                        name="cardNumber"
+                        value={formData.cardNumber}
+                        onChange={handleChange}
+                        placeholder="1234 5678 9012 3456"
+                        className={`w-full px-4 py-2 bg-[#021526] rounded-lg border ${errors.cardNumber ? 'border-red-500' : 'border-[#6EACDA]'} text-[#E2E2B6]`}
+                      />
+                      {errors.cardNumber && <p className="text-red-400 text-sm mt-1">{errors.cardNumber}</p>}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[#E2E2B6] mb-2">Expiry Date</label>
+                        <input
+                          type="text"
+                          name="cardExpiry"
+                          value={formData.cardExpiry}
+                          onChange={handleChange}
+                          placeholder="MM/YY"
+                          className={`w-full px-4 py-2 bg-[#021526] rounded-lg border ${errors.cardExpiry ? 'border-red-500' : 'border-[#6EACDA]'} text-[#E2E2B6]`}
+                        />
+                        {errors.cardExpiry && <p className="text-red-400 text-sm mt-1">{errors.cardExpiry}</p>}
+                      </div>
+                      
+                      <div>
+                        <label className="block text-[#E2E2B6] mb-2">CVC</label>
+                        <input
+                          type="text"
+                          name="cardCvc"
+                          value={formData.cardCvc}
+                          onChange={handleChange}
+                          placeholder="123"
+                          className={`w-full px-4 py-2 bg-[#021526] rounded-lg border ${errors.cardCvc ? 'border-red-500' : 'border-[#6EACDA]'} text-[#E2E2B6]`}
+                        />
+                        {errors.cardCvc && <p className="text-red-400 text-sm mt-1">{errors.cardCvc}</p>}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+                
+                <div className="flex items-center p-4 bg-[#021526] rounded-lg border border-[#6EACDA]">
+                  <input
+                    type="radio"
+                    id="paypal"
+                    name="paymentMethod"
+                    value="paypal"
+                    checked={formData.paymentMethod === 'paypal'}
+                    onChange={handleChange}
+                    className="mr-4 h-5 w-5 text-[#6EACDA]"
+                  />
+                  <label htmlFor="paypal" className="flex-1 text-[#E2E2B6]">PayPal</label>
+                  <FaPaypal className="text-2xl text-[#E2E2B6]" />
+                </div>
+                
+                <div className="flex items-center p-4 bg-[#021526] rounded-lg border border-[#6EACDA]">
+                  <input
+                    type="radio"
+                    id="cash"
+                    name="paymentMethod"
+                    value="cash"
+                    checked={formData.paymentMethod === 'cash'}
+                    onChange={handleChange}
+                    className="mr-4 h-5 w-5 text-[#6EACDA]"
+                  />
+                  <label htmlFor="cash" className="flex-1 text-[#E2E2B6]">Cash on Delivery</label>
+                  <FaMoneyBillWave className="text-2xl text-[#E2E2B6]" />
+                </div>
+              </div>
+              
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                className="w-full bg-[#6EACDA] text-[#021526] py-3 rounded-lg font-semibold hover:bg-[#E2E2B6] transition-colors"
+              >
+                Place Order
+              </motion.button>
+            </motion.form>
+          </div>
+          
+          <div className="lg:w-1/3">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className=" rounded-lg shadow-lg p-6 border border-[#021F44]"
+            >
+              <h2 className="text-xl font-semibold mb-6 text-[#E2E2B6]">Order Summary</h2>
+              
+              <div className="mb-6 space-y-4">
+                {cart.map(item => (
+                  <div key={item.productId} className="flex justify-between items-center py-3 border-b border-[#6EACDA]">
+                    <div>
+                      <p className="text-[#E2E2B6]">{item.name}</p>
+                      <p className="text-sm text-[#6EACDA]">Qty: {item.quantity}</p>
+                    </div>
+                    <p className="text-[#6EACDA]">${(item.price * item.quantity).toFixed(2)}</p>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="border-t border-[#6EACDA] my-4"></div>
+              
+              <div className="flex justify-between font-bold text-lg mb-6 text-[#6EACDA]">
+                <span>Total</span>
+                <span>${getCartTotal().toFixed(2)}</span>
+              </div>
+            </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
