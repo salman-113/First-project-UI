@@ -44,8 +44,24 @@ function App() {
                 <Route path="/orders/:id" element={<OrderDetail />} />
               </Routes>
               <Footer />
-              <ToastContainer position="top-right" autoClose={2000} />
-            </ProductProvider>
+              <ToastContainer
+                position="bottom-left"
+                autoClose={1000}
+                style={{
+                  backdropFilter: 'blur(10px)',
+                  backgroundColor: 'rgba(0, 0, 0, 1)',
+                  borderRadius: '12px',
+                  border: '1px solid rgba',
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  padding: '12px',
+                  color: '#fff',
+                }}
+                toastStyle={{
+                  background: 'transparent',
+                  boxShadow: 'none',
+                  margin: '4px 0',
+                }}
+              />            </ProductProvider>
           </WishlistProvider>
         </CartProvider>
       </AuthProvider>

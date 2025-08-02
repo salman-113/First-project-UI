@@ -118,7 +118,7 @@ const ProductDetail = () => {
                 transition={{ duration: 0.3 }}
                 src={product.images[selectedImage]} 
                 alt={product.name} 
-                className="w-full h-96 object-contain"
+                className="w-full h-110 object-contain"
               />
             </div>
             

@@ -51,7 +51,7 @@ const ProductCard = ({ product }) => {
         <motion.img
           src={product.images[0]}
           alt={product.name}
-          className="w-full h-48 object-cover"
+          className="w-fullobject-cover"
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.3 }}
         />
@@ -60,7 +60,7 @@ const ProductCard = ({ product }) => {
       <div className="p-4">
         <Link to={`/products/${product.id}`} className="block">
           <motion.h3
-            whileHover={{ color: '#6EACDA' }}
+            whileHover={{ color: '#10191fff' }}
             className="text-lg font-semibold mb-2 text-[#E2E2B6]"
           >
             {product.name}

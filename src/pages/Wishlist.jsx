@@ -21,7 +21,7 @@ const Wishlist = () => {
 
   if (!user) {
     return (
-      <div className="bg-[#021526] min-h-screen flex items-center justify-center">
+      <div className="bg-black min-h-screen flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -43,7 +43,7 @@ const Wishlist = () => {
 
   if (loading) {
     return (
-      <div className="bg-[#021526] min-h-screen flex items-center justify-center">
+      <div className="bg-black min-h-screen flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -54,7 +54,7 @@ const Wishlist = () => {
   }
 
   return (
-    <div className="bg-[#021526] min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="bg-black min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -66,7 +66,7 @@ const Wishlist = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-16 bg-[#03346E] rounded-lg shadow-lg border border-[#6EACDA]"
+            className="text-center py-16  rounded-lg shadow-lg "
           >
             <h2 className="text-xl md:text-2xl font-semibold mb-6 text-[#E2E2B6]">Your wishlist is empty</h2>
             <motion.div whileHover={{ scale: 1.05 }}>

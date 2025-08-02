@@ -9,12 +9,6 @@ const Orders = () => {
   // Always try to refresh user when mounting Orders page
   useEffect(() => { refreshUser && refreshUser(); }, []);
 
-  // Debug button to manually refresh and log user
-  const handleDebug = async () => {
-    if (refreshUser) await refreshUser();
-    console.log('[Orders.jsx DEBUG] user:', user);
-    alert('Check console for user object');
-  };
   console.log('[Orders.jsx] user.orders:', user?.orders);
   const [loading, setLoading] = useState(true);
   const { orderId } = useParams();
@@ -32,7 +26,7 @@ const Orders = () => {
 
   if (!user) {
     return (
-      <div className="bg-[#021526] min-h-screen flex items-center justify-center">
+      <div className="bg-black min-h-screen flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -43,7 +37,7 @@ const Orders = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/login')}
-            className="bg-[#6EACDA] text-[#021526] px-6 py-3 rounded-lg font-semibold hover:bg-[#E2E2B6] transition-colors"
+            className="bg-black [#021526] px-6 py-3 rounded-lg font-semibold hover:bg-[#E2E2B6] transition-colors"
           >
             Login
           </motion.button>
@@ -54,7 +48,7 @@ const Orders = () => {
 
   if (loading) {
     return (
-      <div className="bg-[#021526] min-h-screen flex items-center justify-center">
+      <div className="bg-black min-h-screen flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -66,10 +60,8 @@ const Orders = () => {
 
 return (
   <div>
-    <div style={{position: 'fixed', top: 10, right: 10, zIndex: 9999}}>
-      <button onClick={handleDebug} style={{padding: '8px 16px', background: '#6EACDA', color: '#021526', borderRadius: '6px', fontWeight: 'bold'}}>Debug Orders</button>
-    </div>
-    <div className="bg-[#021526] min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    
+    <div className="bg-black min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -81,20 +73,20 @@ return (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-16 bg-[#03346E] rounded-lg shadow-lg border border-[#6EACDA]"
+            className="text-center py-16 bg-[#03346E] rounded-lg shadow-lg border "
           >
             <h2 className="text-xl md:text-2xl font-semibold mb-6 text-[#E2E2B6]">You have no orders yet</h2>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/products')}
-              className="bg-[#6EACDA] text-[#021526] px-6 py-3 rounded-lg font-semibold hover:bg-[#E2E2B6] transition-colors"
+              className=" text-[#021526] px-6 py-3 rounded-lg font-semibold hover:bg-[#E2E2B6] transition-colors"
             >
               Start Shopping
             </motion.button>
           </motion.div>
         ) : (
-          <div className="bg-[#03346E] rounded-lg shadow-lg overflow-hidden border border-[#6EACDA]">
+          <div className=" rounded-lg shadow-lg overflow-hidden ">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-[#021526]">

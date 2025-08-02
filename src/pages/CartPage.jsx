@@ -46,7 +46,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="bg-[#021526] min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="bg-black min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -72,7 +72,7 @@ const Cart = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-16 bg-[#03346E] rounded-lg shadow-lg border border-[#6EACDA]"
+            className="text-center py-16 rounded-lg shadow-lg border "
           >
             <h2 className="text-xl md:text-2xl font-semibold mb-6 text-[#E2E2B6]">Your cart is empty</h2>
             <motion.button
@@ -90,7 +90,7 @@ const Cart = () => {
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-[#03346E] rounded-lg shadow-lg overflow-hidden border border-[#6EACDA]"
+                className=" rounded-lg shadow-lg overflow-hidden border border-[#6EACDA]"
               >
                 <div className="hidden md:grid grid-cols-12 bg-[#021526] text-[#E2E2B6] p-4">
                   <div className="col-span-5">Product</div>
@@ -175,7 +175,7 @@ const Cart = () => {
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-[#03346E] rounded-lg shadow-lg p-6 border border-[#6EACDA] sticky top-4"
+                className=" rounded-lg shadow-lg p-6 sticky top-4"
               >
                 <h2 className="text-xl font-semibold mb-6 text-[#E2E2B6]">Order Summary</h2>
                 
