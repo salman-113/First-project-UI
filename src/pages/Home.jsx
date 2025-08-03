@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ProductContext } from '../context/ProductContext';
 import ProductCard from '../components/Product/ProductCard';
 import { motion } from 'framer-motion';
@@ -9,6 +9,37 @@ import 'swiper/css/effect-fade';
 
 const Home = () => {
   const { filteredProducts } = useContext(ProductContext);
+  const [count, setCount] = useState(0);
+  const targetCount = 45699;
+
+  // Count up animation effect
+  useEffect(() => {
+    const duration = 3000; // 3 seconds
+    const increment = targetCount / (duration / 16); // Roughly 60fps
+    
+    const timer = setInterval(() => {
+      setCount(prevCount => {
+        const newCount = prevCount + increment;
+        if (newCount >= targetCount) {
+          clearInterval(timer);
+          return targetCount;
+        }
+        return newCount;
+      });
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Logo slider data
+  const logos = [
+    "https://cdn.shopify.com/s/files/1/0548/8849/7221/files/logo_white_text_blue.png",
+    "https://cdn.shopify.com/s/files/1/0548/8849/7221/files/logo_white_text_blue.png",
+    "https://cdn.shopify.com/s/files/1/0548/8849/7221/files/logo_white_text_blue.png",
+    "https://cdn.shopify.com/s/files/1/0548/8849/7221/files/logo_white_text_blue.png",
+    "https://cdn.shopify.com/s/files/1/0548/8849/7221/files/logo_white_text_blue.png",
+    "https://cdn.shopify.com/s/files/1/0548/8849/7221/files/logo_white_text_blue.png"
+  ];
 
   // Slider data
   const slides = [
@@ -76,9 +107,47 @@ const Home = () => {
     transition: { duration: 0.6, ease: "easeOut" }
   };
 
+  // Get first 4 products
+  const featuredProducts = filteredProducts.slice(0, 4);
+
   return (
-    <div className="container mx-auto px-4">
-      {/* Hero Slider Section */}
+    <div className="container mx-auto bg-black">
+      {/* Logo Slider Section - First section */}
+      <motion.section 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-full bg-gray-100 overflow-hidden"
+      >
+        <div className="relative bg-black">
+          <motion.div
+            className="flex"
+            animate={{
+              x: ['0%', '-100%'],
+            }}
+            transition={{
+              duration: 20,
+              ease: "linear",
+              repeat: Infinity,
+            }}
+          >
+            {[...logos, ...logos].map((logo, index) => (
+              <div key={index} className="flex-shrink-0 px-8 bg-black">
+                <img 
+                  src={logo} 
+                  alt={`Logo ${index}`} 
+                  className="h-12 object-contain bg-black" 
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+    
+
+      {/* Hero Slider Section - Third section */}
       <section className="mb-12 w-full h-[80vh] max-h-[800px] relative">
         <Swiper
           modules={[Autoplay, EffectFade]}
@@ -135,6 +204,33 @@ const Home = () => {
         </Swiper>
       </section>
 
+        {/* Counting Number Section - Second section */}
+      <motion.section
+        {...sectionAnimation}
+        transition={{ duration: 0.8 }}
+        className="py-20 bg-black"
+      >
+        <div className="text-center">
+          <h2 className="text-6xl md:text-8xl font-bold mb-4">
+            <motion.span
+              className="text-gradient"
+              style={{
+                background: 'linear-gradient(100deg, rgba(69, 7, 255, 1) 35%',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+                display: 'inline-block'
+              }}
+            >
+              {Math.floor(count).toLocaleString()}
+            </motion.span>
+          </h2>
+          <p className="text-xl md:text-2xl text-gray-300 mt-4">
+            Happy Customers and Counting
+          </p>
+        </div>
+      </motion.section>
+
       {/* Video Hero Section */}
       <motion.section 
         {...sectionAnimation}
@@ -157,7 +253,7 @@ const Home = () => {
       {/* New Image Section */}
       <motion.section
         {...sectionAnimation}
-        transition={{ duration: 0.8, delay: 0.1 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
         className="mb-16 w-full rounded-xl overflow-hidden"
       >
         <div className="relative w-full h-0 pb-[50%]">
@@ -197,7 +293,7 @@ const Home = () => {
       {/* Featured Products Section */}
       <motion.section 
         {...sectionAnimation}
-        transition={{ duration: 0.5, delay: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
         className="mb-16"
       >
         <div className="flex justify-between items-center mb-8">
@@ -206,20 +302,20 @@ const Home = () => {
             whileInView={{ x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5 }}
-            className="text-3xl font-bold"
+            className="text-3xl font-bold text-white"
           >
             Featured Products
           </motion.h2>
           <motion.a
             whileHover={{ scale: 1.05 }}
             href="/products"
-            className="text-blue-600 hover:underline"
+            className="text-blue-400 hover:underline"
           >
             View All
           </motion.a>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredProducts.slice(0, 4).map((product, index) => (
+          {featuredProducts.map((product, index) => (
             <motion.div
               key={product.id}
               {...staggeredAnimation}
@@ -236,63 +332,18 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* New Arrivals Section */}
-      <motion.section 
-        {...sectionAnimation}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        className="mb-16"
-      >
-        <div className="flex justify-between items-center mb-8">
-          <motion.h2 
-            initial={{ x: -20 }}
-            whileInView={{ x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl font-bold"
-          >
-            New Arrivals
-          </motion.h2>
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            href="/products"
-            className="text-blue-600 hover:underline"
-          >
-            View All
-          </motion.a>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredProducts
-            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-            .slice(0, 4)
-            .map((product, index) => (
-              <motion.div
-                key={product.id}
-                {...staggeredAnimation}
-                transition={{ 
-                  duration: 0.5, 
-                  delay: index * 0.1,
-                  ease: "backOut"
-                }}
-                whileHover={{ y: -10 }}
-              >
-                <ProductCard product={product} />
-              </motion.div>
-            ))}
-        </div>
-      </motion.section>
-
       {/* Why Choose Us Section */}
       <motion.section 
         {...sectionAnimation}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="mb-16 bg-gradient-to-r from-black-50 to-indigo-50 p-12 rounded-2xl shadow-sm"
+        className="mb-16 bg-gradient-to-r from-gray-900 to-indigo-900 p-12 rounded-2xl shadow-sm"
       >
         <motion.h2 
           initial={{ y: 20 }}
           whileInView={{ y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
-          className="text-3xl font-bold text-center mb-12"
+          className="text-3xl font-bold text-center mb-12 text-white"
         >
           Why Choose Us?
         </motion.h2>
@@ -300,7 +351,7 @@ const Home = () => {
           {[
             {
               icon: (
-                <svg className="w-12 h-12 mx-auto mb-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-12 h-12 mx-auto mb-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               ),
@@ -309,7 +360,7 @@ const Home = () => {
             },
             {
               icon: (
-                <svg className="w-12 h-12 mx-auto mb-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-12 h-12 mx-auto mb-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               ),
@@ -318,7 +369,7 @@ const Home = () => {
             },
             {
               icon: (
-                <svg className="w-12 h-12 mx-auto mb-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-12 h-12 mx-auto mb-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               ),
@@ -330,7 +381,7 @@ const Home = () => {
               key={index}
               {...staggeredAnimation}
               transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-              className="bg-white p-8 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow"
+              className="bg-gray-800 p-8 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow text-white"
               whileHover={{ 
                 y: -5,
                 transition: { duration: 0.3 }
@@ -343,7 +394,7 @@ const Home = () => {
                 {item.icon}
               </motion.div>
               <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-              <p className="text-gray-600">{item.description}</p>
+              <p className="text-gray-300">{item.description}</p>
             </motion.div>
           ))}
         </div>
@@ -353,7 +404,7 @@ const Home = () => {
       <motion.section
         {...sectionAnimation}
         transition={{ duration: 0.5, delay: 0.8 }}
-        className="mb-16 bg-gradient-to-r from-black-600 to-[#0A0F2C] text-[#E2E2B6] p-12 rounded-2xl"
+        className="mb-16 bg-gradient-to-r from-gray-900 to-[#0A0F2C] text-[#E2E2B6] p-12 rounded-2xl"
       >
         <div className="max-w-3xl mx-auto text-center">
           <motion.h2 
