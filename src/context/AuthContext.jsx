@@ -1,47 +1,98 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Always fetch latest user from backend
-  const refreshUser = async () => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      try {
-        const response = await axios.get(`http://localhost:5001/users/${parsedUser.id}`);
-        setUser(response.data);
-        localStorage.setItem('user', JSON.stringify(response.data));
-      } catch (error) {
-        setUser(parsedUser);
-      }
-    }
-  };
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [ordersLoading, setOrdersLoading] = useState(false);
 
-useEffect(() => {
-  const fetchUser = async () => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
+  // Memoized refresh function
+  const refreshUser = useCallback(async () => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (!storedUser) return null;
+
       const parsedUser = JSON.parse(storedUser);
-      try {
-        const response = await axios.get(`http://localhost:5001/users/${parsedUser.id}`);
-        setUser(response.data);
-      } catch (error) {
-        setUser(parsedUser);
-      }
+      const response = await axios.get(`http://localhost:5001/users/${parsedUser.id}`);
+      
+      // Update state and localStorage
+      setUser(response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      
+      return response.data;
+    } catch (error) {
+      console.error('Error refreshing user:', error);
+      return null;
     }
-    setLoading(false);
+  }, []);
+
+  // Initialize auth state
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          const response = await axios.get(`http://localhost:5001/users/${parsedUser.id}`);
+          setUser(response.data);
+        }
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        // Fallback to stored user if backend fails
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) setUser(JSON.parse(storedUser));
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    initializeAuth();
+  }, []);
+
+  // Dedicated cart functions to avoid unnecessary toasts
+  const updateCart = async (updatedCart) => {
+    try {
+      if (!user) return false;
+      
+      await axios.patch(`http://localhost:5001/users/${user.id}`, {
+        cart: updatedCart
+      });
+      await refreshUser();
+      return true;
+    } catch (error) {
+      console.error('Cart update failed:', error);
+      return false;
+    }
   };
-  fetchUser();
-}, [user?.orders?.length]);
+
+  const addToCart = async (product) => {
+    try {
+      if (!user) {
+        toast.error('Please login to add items to cart');
+        return false;
+      }
+
+      const updatedCart = [...user.cart, product];
+      const success = await updateCart(updatedCart);
+      
+      if (success) {
+        toast.success(`${product.name} added to cart`);
+      }
+      return success;
+    } catch (error) {
+      toast.error('Failed to add item to cart');
+      return false;
+    }
+  };
 
   const login = async (email, password) => {
     try {
+      setAuthLoading(true);
       const response = await axios.get(`http://localhost:5001/users?email=${email}`);
+      
       if (response.data.length === 0) {
         toast.error('User not found');
         return false;
@@ -65,12 +116,14 @@ useEffect(() => {
     } catch (error) {
       toast.error('Login failed');
       return false;
+    } finally {
+      setAuthLoading(false);
     }
   };
 
   const register = async (name, email, password) => {
     try {
-      // Check if email already exists
+      setAuthLoading(true);
       const emailCheck = await axios.get(`http://localhost:5001/users?email=${email}`);
       if (emailCheck.data.length > 0) {
         toast.error('Email already registered');
@@ -97,6 +150,8 @@ useEffect(() => {
     } catch (error) {
       toast.error('Registration failed');
       return false;
+    } finally {
+      setAuthLoading(false);
     }
   };
 
@@ -108,54 +163,45 @@ useEffect(() => {
 
   const updateUser = async (updatedData) => {
     try {
-      // Use PUT and send the full user object for json-server compatibility
-      const response = await axios.put(`http://localhost:5001/users/${user.id}`, { ...user, ...updatedData });
+      setAuthLoading(true);
+      const response = await axios.put(
+        `http://localhost:5001/users/${user.id}`, 
+        { ...user, ...updatedData }
+      );
       localStorage.setItem('user', JSON.stringify(response.data));
       setUser(response.data);
+      toast.success('Profile updated successfully');
       return true;
     } catch (error) {
-      toast.error('Failed to update user');
+      toast.error('Failed to update profile');
       return false;
+    } finally {
+      setAuthLoading(false);
     }
   };
 
   const addOrder = async (orderData) => {
-    console.log('[addOrder] called with:', orderData);
     try {
+      setOrdersLoading(true);
       if (!user) {
         toast.error('You must be logged in to place an order');
         return null;
       }
 
-      // Generate a unique ID for the order
       const orderId = `ord_${Date.now()}`;
       const order = {
         id: orderId,
         ...orderData,
         createdAt: new Date().toISOString(),
-        status: 'processing' // Add default status
+        status: 'processing'
       };
 
-      // First get the current user data from the database
-      const currentUserResponse = await axios.get(`http://localhost:5001/users/${user.id}`);
-      const currentUser = currentUserResponse.data;
-
-      // Prepare the updated user data with the new order, ensuring all fields are present
       const updatedUser = {
-        id: currentUser.id,
-        name: currentUser.name,
-        username: currentUser.username || '',
-        email: currentUser.email,
-        password: currentUser.password,
-        role: currentUser.role,
-        isBlock: currentUser.isBlock,
+        ...user,
         cart: [],
-        orders: [...(currentUser.orders || []), order],
-        wishlist: currentUser.wishlist || [],
-        created_at: currentUser.created_at
+        orders: [...(user.orders || []), order]
       };
 
-      // Update the user in the database
       await axios.put(`http://localhost:5001/users/${user.id}`, updatedUser);
       await refreshUser();
 
@@ -165,14 +211,25 @@ useEffect(() => {
       console.error('Error placing order:', error);
       toast.error('Failed to create order');
       return null;
+    } finally {
+      setOrdersLoading(false);
     }
   };
 
-
-
-
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, addOrder }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      authLoading,
+      ordersLoading,
+      login, 
+      register, 
+      logout, 
+      updateUser,
+      updateCart,
+      addToCart,
+      addOrder,
+      refreshUser
+    }}>
       {children}
     </AuthContext.Provider>
   );

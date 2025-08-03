@@ -130,7 +130,7 @@ return (
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => navigate(`/orders/${order.id}`)}
+                          onClick={() => navigate(`/orders/details/${order.id}`)}
                           className="text-[#6EACDA] hover:text-[#E2E2B6] transition-colors"
                         >
                           View Details

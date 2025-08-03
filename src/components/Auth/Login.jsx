@@ -24,8 +24,8 @@ const Login = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-md">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+      <div className="bg-black rounded-lg shadow-md p-6 border border-[#03346E]">
+        <h1 className="text-2xl font-bold mb-6 text-center text-[#E2E2B6] ">Please Login</h1>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -35,7 +35,7 @@ const Login = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 border rounded text-[#E2E2B6]"
               required
             />
           </div>
@@ -47,7 +47,7 @@ const Login = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 border rounded text-[#E2E2B6]"
               required
             />
           </div>
@@ -55,7 +55,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full bg-[#03346E] text-white py-2 rounded hover:bg-blue-700 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>

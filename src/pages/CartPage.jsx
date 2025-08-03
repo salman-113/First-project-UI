@@ -37,7 +37,6 @@ const Cart = () => {
     return (
       <div className="bg-[#021526] min-h-screen flex items-center justify-center">
         <motion.div
-          animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           className="h-16 w-16 border-t-4 border-b-4 border-[#6EACDA] rounded-full"
         ></motion.div>

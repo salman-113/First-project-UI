@@ -41,7 +41,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/orders/:id" element={<OrderDetail />} />
+                <Route path="/orders/details/:orderId" element={<OrderDetail />} />
               </Routes>
               <Footer />
               <ToastContainer
