@@ -15,17 +15,14 @@ const CartItem = ({ item }) => {
     setQuantity(newQuantity);
 
     try {
-      // Get current cart from user
       const currentCart = [...user.cart];
       
-      // Find and update the item in cart
       const updatedCart = currentCart.map(cartItem => 
         cartItem.productId === item.productId 
           ? { ...cartItem, quantity: newQuantity }
           : cartItem
       );
 
-      // Use the dedicated updateCart function (no toast)
       const success = await updateCart(updatedCart);
       
       if (!success) {
@@ -60,7 +57,6 @@ const CartItem = ({ item }) => {
 
   return (
     <div className="flex flex-col sm:flex-row border-b border-gray-200 py-4">
-      {/* Product Image and Info */}
       <div className="flex flex-1 items-start space-x-4">
         <img
           src={item.image}
@@ -76,7 +72,6 @@ const CartItem = ({ item }) => {
         </div>
       </div>
       
-      {/* Quantity controls and price */}
       <div className="flex items-center justify-between sm:justify-end sm:space-x-8 mt-4 sm:mt-0">
         <div className="flex items-center border rounded">
           <button

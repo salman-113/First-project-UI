@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { AuthContext } from './AuthContext';
-import { CartContext } from './CartContext'; // ✅ Add this
+import { CartContext } from './CartContext'; 
 
 export const WishlistContext = createContext();
 
@@ -74,7 +74,6 @@ export const WishlistProvider = ({ children }) => {
       return false;
     }
 
-    // Prepare new cart and wishlist arrays
     const newCart = [
       ...cart,
       {
@@ -87,7 +86,6 @@ export const WishlistProvider = ({ children }) => {
     ];
     const newWishlist = wishlist.filter(item => item.productId !== productId);
 
-    // Update user with both new cart and wishlist at once
     const success = await updateUser({ cart: newCart, wishlist: newWishlist });
     if (success) {
       setCart(newCart);

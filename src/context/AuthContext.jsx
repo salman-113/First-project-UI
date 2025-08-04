@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(true);
   const [ordersLoading, setOrdersLoading] = useState(false);
 
-  // Memoized refresh function
   const refreshUser = useCallback(async () => {
     try {
       const storedUser = localStorage.getItem('user');
@@ -18,7 +17,6 @@ export const AuthProvider = ({ children }) => {
       const parsedUser = JSON.parse(storedUser);
       const response = await axios.get(`http://localhost:5001/users/${parsedUser.id}`);
       
-      // Update state and localStorage
       setUser(response.data);
       localStorage.setItem('user', JSON.stringify(response.data));
       
@@ -29,7 +27,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Initialize auth state
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -41,7 +38,6 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
-        // Fallback to stored user if backend fails
         const storedUser = localStorage.getItem('user');
         if (storedUser) setUser(JSON.parse(storedUser));
       } finally {
@@ -52,7 +48,6 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  // Dedicated cart functions to avoid unnecessary toasts
   const updateCart = async (updatedCart) => {
     try {
       if (!user) return false;

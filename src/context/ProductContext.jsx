@@ -19,7 +19,6 @@ export const ProductProvider = ({ children }) => {
         setProducts(response.data);
         setFilteredProducts(response.data);
         
-        // Extract unique categories
         const uniqueCategories = [...new Set(response.data.map(product => product.category))];
         setCategories(uniqueCategories);
         setLoading(false);

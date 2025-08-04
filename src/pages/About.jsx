@@ -18,7 +18,7 @@ const About = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Trigger on initial load
+    handleScroll(); 
     
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

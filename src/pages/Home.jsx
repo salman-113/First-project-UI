@@ -12,10 +12,9 @@ const Home = () => {
   const [count, setCount] = useState(0);
   const targetCount = 45699;
 
-  // Count up animation effect
   useEffect(() => {
-    const duration = 3000; // 3 seconds
-    const increment = targetCount / (duration / 16); // Roughly 60fps
+    const duration = 3000; 
+    const increment = targetCount / (duration / 16); 
 
     const timer = setInterval(() => {
       setCount(prevCount => {
@@ -107,7 +106,6 @@ const Home = () => {
     transition: { duration: 0.6, ease: "easeOut" }
   };
 
-  // Get first 4 products
   const featuredProducts = filteredProducts.slice(0, 4);
 
   return (
@@ -224,7 +222,7 @@ const Home = () => {
       <motion.span
         className="text-gradient"
         style={{
-          color: '#E2E2B6', // Changed to your desired color
+          color: '#E2E2B6',
           display: 'inline-block'
         }}
       >

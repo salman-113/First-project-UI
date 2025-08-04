@@ -7,8 +7,6 @@ import { motion } from 'framer-motion';
 const Orders = () => {
   const { user, refreshUser } = useContext(AuthContext);
   useEffect(() => { refreshUser && refreshUser(); }, []);
-
-  console.log('[Orders.jsx] user.orders:', user?.orders);
   const [loading, setLoading] = useState(true);
   const { orderId } = useParams();
   const navigate = useNavigate();

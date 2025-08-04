@@ -88,7 +88,7 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = useCallback(async () => {
     return await updateCart([]);
-  }, []);
+  },[]);
 
   const getCartTotal = useCallback(() => {
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);

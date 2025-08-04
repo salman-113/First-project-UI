@@ -46,7 +46,7 @@ function App() {
               <Footer />
               <ToastContainer
                 position="bottom-left"
-                autoClose={1000}
+                autoClose={9000}
                 style={{
                   backdropFilter: 'blur(10px)',
                   backgroundColor: 'rgba(0, 0, 0, 1)',

@@ -70,15 +70,6 @@ const Navbar = () => {
               EchoBay
             </Link>
 
-            <div className="relative w-64">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 rounded bg-[#021526] text-[#E2E2B6] focus:outline-none focus:ring-1 focus:ring-[#E2E2B6] placeholder-[#6EACDA]"
-              />
-            </div>
           </div>
 
           <div className="flex items-center space-x-8">

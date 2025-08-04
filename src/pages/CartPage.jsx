@@ -14,7 +14,7 @@ const Cart = () => {
     updateQuantity, 
     clearCart, 
     getCartTotal,
-    getCartCount // Now available from CartContext
+    getCartCount 
   } = useContext(CartContext);
   const navigate = useNavigate();
 
