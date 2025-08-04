@@ -81,7 +81,7 @@ const ProductFilter = () => {
           </select>
         </div>
 
-        {/* Active Filters Indicator */}
+        {/* Filters Indicator */}
         {(searchTerm || selectedCategory !== 'all' || sortOption !== 'default') && (
           <div className="pt-4 border-t border-[#6EACDA]">
             <div className="flex justify-between items-center">

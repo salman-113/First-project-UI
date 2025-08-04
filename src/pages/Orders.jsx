@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 
 const Orders = () => {
   const { user, refreshUser } = useContext(AuthContext);
-  // Always try to refresh user when mounting Orders page
   useEffect(() => { refreshUser && refreshUser(); }, []);
 
   console.log('[Orders.jsx] user.orders:', user?.orders);
@@ -17,7 +16,6 @@ const Orders = () => {
   useEffect(() => {
     if (user) {
       setLoading(false);
-      // If coming from checkout with a new order, show success message
       if (orderId) {
         toast.success('Order placed successfully!');
       }

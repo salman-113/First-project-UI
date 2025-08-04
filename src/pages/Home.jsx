@@ -16,7 +16,7 @@ const Home = () => {
   useEffect(() => {
     const duration = 3000; // 3 seconds
     const increment = targetCount / (duration / 16); // Roughly 60fps
-    
+
     const timer = setInterval(() => {
       setCount(prevCount => {
         const newCount = prevCount + increment;
@@ -46,7 +46,7 @@ const Home = () => {
     {
       id: 1,
       image: "https://www.apple.com/v/airpods-max/i/images/overview/bento/midnight/bento_1_airpod_max_midnight__4jy1tkqh9qay_xlarge_2x.jpg",
-      title: "Summer Collection 2024",
+      title: "Apple Always",
       subtitle: "Discover the latest trends",
       description: "Up to 30% off on selected items",
       buttonText: "Shop Now"
@@ -113,7 +113,7 @@ const Home = () => {
   return (
     <div className="container mx-auto bg-black">
       {/* Logo Slider Section - First section */}
-      <motion.section 
+      <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -133,10 +133,10 @@ const Home = () => {
           >
             {[...logos, ...logos].map((logo, index) => (
               <div key={index} className="flex-shrink-0 px-8 bg-black">
-                <img 
-                  src={logo} 
-                  alt={`Logo ${index}`} 
-                  className="h-12 object-contain bg-black" 
+                <img
+                  src={logo}
+                  alt={`Logo ${index}`}
+                  className="h-12 object-contain bg-black"
                   loading="lazy"
                 />
               </div>
@@ -145,10 +145,10 @@ const Home = () => {
         </div>
       </motion.section>
 
-    
 
-      {/* Hero Slider Section - Third section */}
-      <section className="mb-12 w-full h-[80vh] max-h-[800px] relative">
+
+      {/*Auto slid -fist*/}
+      <section className="mb-12 w-full h-[50vh] md:h-[80vh] max-h-[800px] relative">
         <Swiper
           modules={[Autoplay, EffectFade]}
           effect="fade"
@@ -161,38 +161,47 @@ const Home = () => {
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.id} className="relative">
+              {/* Mobile-optimized image with different sources */}
+              <picture>
+                <source media="(max-width: 640px)" srcSet={slide.mobileImage || slide.image} />
+                <source media="(min-width: 641px)" srcSet={slide.image} />
+                <img
+                  src={slide.image}
+                  alt={slide.title}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </picture>
+
+              {/* Dark overlay */}
               <div className="absolute inset-0 bg-black/30 z-10" />
-              <img 
-                src={slide.image} 
-                alt={slide.title} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
+
+              {/* Content container */}
               <div className="absolute inset-0 z-20 flex items-center">
-                <div className="container mx-auto px-4">
-                  <motion.div 
+                <div className="container mx-auto px-4 sm:px-6">
+                  <motion.div
                     initial="hidden"
                     animate="visible"
                     variants={containerVariants}
-                    className="max-w-lg text-white"
+                    className="max-w-lg text-white px-4 py-8 md:px-0 md:py-0"
                   >
-                    <motion.p variants={itemVariants} className="text-lg font-medium mb-2">
+                    <motion.p variants={itemVariants} className="text-sm sm:text-lg font-medium mb-1 sm:mb-2">
                       {slide.subtitle}
                     </motion.p>
-                    <motion.h1 
-                      variants={itemVariants} 
-                      className="text-4xl md:text-6xl font-bold mb-4"
+                    <motion.h1
+                      variants={itemVariants}
+                      className="text-2xl sm:text-4xl md:text-6xl font-bold mb-2 sm:mb-4"
                     >
                       {slide.title}
                     </motion.h1>
-                    <motion.p variants={itemVariants} className="text-xl mb-6">
+                    <motion.p variants={itemVariants} className="text-base sm:text-xl mb-4 sm:mb-6">
                       {slide.description}
                     </motion.p>
                     <motion.button
                       variants={itemVariants}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-opacity-90 transition-all"
+                      className="bg-white text-black px-6 py-2 sm:px-8 sm:py-3 text-sm sm:text-base rounded-full font-medium hover:bg-opacity-90 transition-all"
                     >
                       {slide.buttonText}
                     </motion.button>
@@ -204,56 +213,59 @@ const Home = () => {
         </Swiper>
       </section>
 
-        {/* Counting Number Section - Second section */}
-      <motion.section
-        {...sectionAnimation}
-        transition={{ duration: 0.8 }}
-        className="py-20 bg-black"
+{/* Counting Number Section - Second section */}
+<motion.section
+  {...sectionAnimation}
+  transition={{ duration: 0.8 }}
+  className="py-20 bg-black"
+>
+  <div className="text-center">
+    <h2 className="text-6xl md:text-8xl font-bold mb-4">
+      <motion.span
+        className="text-gradient"
+        style={{
+          color: '#E2E2B6', // Changed to your desired color
+          display: 'inline-block'
+        }}
       >
-        <div className="text-center">
-          <h2 className="text-6xl md:text-8xl font-bold mb-4">
-            <motion.span
-              className="text-gradient"
-              style={{
-                background: 'linear-gradient(100deg, rgba(69, 7, 255, 1) 35%',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-                display: 'inline-block'
-              }}
-            >
-              {Math.floor(count).toLocaleString()}
-            </motion.span>
-          </h2>
-          <p className="text-xl md:text-2xl text-gray-300 mt-4">
-            Happy Customers and Counting
-          </p>
-        </div>
-      </motion.section>
+        {Math.floor(count).toLocaleString()}
+      </motion.span>
+    </h2>
+    <p className="text-xl md:text-2xl text-gray-300 mt-4">
+      Happy Customers and Counting
+    </p>
+  </div>
+</motion.section>
 
       {/* Video Hero Section */}
-      <motion.section 
+      <motion.section
         {...sectionAnimation}
-        className="mb-16 w-full rounded-xl overflow-hidden shadow-xl"
+        className="mb-16 w-full p-10 rounded-xl overflow-hidden shadow-xl"
       >
-        <div className="relative w-full h-0 pb-[56.25%] overflow-hidden">
-          <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline 
-            className="absolute top-0 left-0 w-full h-full object-cover"
+        <div className="relative w-full h-0 pb-[56.25%] overflow-hidden rounded-xl">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
           >
-            <source src="https://www.apple.com/105/media/us/airpods-pro/2022/d2deeb8e-83eb-48ea-9721-f567cf0fffa8/anim/spatial-audio/large.mp4" type="video/mp4" />
+            <source src="https://www.apple.com/105/media/us/airpods-max/2024/e8f376d6-82b2-40ca-8a22-5f87de755d6b/anim/max-loop/xlarge_2x.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <h1 className="text-[#E2E2B6] text-7xl font-bold text-center">
+              AirPods Max<br />
+              <span className="text-5xl">Symphonic boom.</span>
+            </h1>
+          </div>
         </div>
       </motion.section>
 
       {/* New Image Section */}
       <motion.section
         {...sectionAnimation}
-        transition={{ duration: 0.8, delay: 0.2 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
         className="mb-16 w-full rounded-xl overflow-hidden"
       >
         <div className="relative w-full h-0 pb-[50%]">
@@ -291,13 +303,13 @@ const Home = () => {
       </motion.section>
 
       {/* Featured Products Section */}
-      <motion.section 
+      <motion.section
         {...sectionAnimation}
         transition={{ duration: 0.5, delay: 0.3 }}
         className="mb-16"
       >
         <div className="flex justify-between items-center mb-8">
-          <motion.h2 
+          <motion.h2
             initial={{ x: -20 }}
             whileInView={{ x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
@@ -319,8 +331,8 @@ const Home = () => {
             <motion.div
               key={product.id}
               {...staggeredAnimation}
-              transition={{ 
-                duration: 0.5, 
+              transition={{
+                duration: 0.5,
                 delay: index * 0.1,
                 ease: "backOut"
               }}
@@ -333,12 +345,12 @@ const Home = () => {
       </motion.section>
 
       {/* Why Choose Us Section */}
-      <motion.section 
+      <motion.section
         {...sectionAnimation}
         transition={{ duration: 0.5, delay: 0.6 }}
         className="mb-16 bg-gradient-to-r from-gray-900 to-indigo-900 p-12 rounded-2xl shadow-sm"
       >
-        <motion.h2 
+        <motion.h2
           initial={{ y: 20 }}
           whileInView={{ y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
@@ -377,17 +389,17 @@ const Home = () => {
               description: "Quick and reliable delivery with real-time tracking to your doorstep."
             }
           ].map((item, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               {...staggeredAnimation}
               transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
               className="bg-gray-800 p-8 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow text-white"
-              whileHover={{ 
+              whileHover={{
                 y: -5,
                 transition: { duration: 0.3 }
               }}
             >
-              <motion.div 
+              <motion.div
                 whileHover={{ scale: 1.1 }}
                 className="inline-block"
               >
@@ -407,8 +419,8 @@ const Home = () => {
         className="mb-16 bg-gradient-to-r from-gray-900 to-[#0A0F2C] text-[#E2E2B6] p-12 rounded-2xl"
       >
         <div className="max-w-3xl mx-auto text-center">
-          <motion.h2 
-            initial={{ y: 20 }} 
+          <motion.h2
+            initial={{ y: 20 }}
             whileInView={{ y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5 }}
@@ -416,7 +428,7 @@ const Home = () => {
           >
             Stay Updated
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ y: 20 }}
             whileInView={{ y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
@@ -425,18 +437,18 @@ const Home = () => {
           >
             Subscribe to our newsletter for the latest products and exclusive offers.
           </motion.p>
-          <motion.div 
+          <motion.div
             initial={{ y: 20 }}
             whileInView={{ y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
           >
-            <motion.input 
-              type="email" 
-              placeholder="Your email address" 
+            <motion.input
+              type="email"
+              placeholder="Your email address"
               className="flex-grow px-4 py-3 rounded-full text-gray-900 focus:outline-none"
-              whileFocus={{ 
+              whileFocus={{
                 scale: 1.02,
                 boxShadow: "0 0 0 2px rgba(225, 219, 104, 1)"
               }}
